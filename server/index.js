@@ -11,23 +11,12 @@ const screenSize = robot.getScreenSize();
 
 console.log(robot.getMousePos());
 
-// arr = [
-//   [10, 20],
-//   [20, 30],
-//   [30, 40],
-//   [40, 50],
-// ];
-
-// for (i in arr) {
-//   robot.moveMouseSmooth(arr[i][0], arr[i][1]);
-//   // console.log();
-// }
-
-let previousPoint = [-1, -1, 0];
+let previousPoint = [-1, -1];
 
 app.post("/touchpad", (req, res) => {
   console.log("hit");
-  const [coordinateX, coordinateY, theta] = req.body.pointerCoordinates;
+  const [coordinateX, coordinateY] = req.body.pointerCoordinates;
+  const isFirstTouch = req.body.isFirstTouch;
   const padSize = req.body.padSize;
 
   const [currentCursorPosX, currentCursorPosY] = [
@@ -42,18 +31,22 @@ app.post("/touchpad", (req, res) => {
     // const PadTouchPosX = (coordinates[0] * screenSize.width) / padSize[0];
     // const PadTouchPosY = (coordinates[1] * screenSize.height) / padSize[1];
 
-    const padPointDistance = Math.sqrt(
-      Math.pow(coordinateX - previousPoint[0], 2) +
-        Math.pow(coordinateY - previousPoint[1], 2)
-    );
+    if (isFirstTouch === 1) previousPoint = [coordinateX, coordinateY];
+    else {
+      const divX = coordinateX - previousPoint[0];
+      const divY = coordinateY - previousPoint[1];
 
-    // const cursorToBePlacePosX = 
+      const cursorToBePlacePosX = currentCursorPosX + divX;
+      const cursorToBePlacePosY = currentCursorPosY + divY;
 
-    console.log(
-      `theta -> ${theta}, coordinates -> ${coordinateX} ${coordinateY}, prevCoordinates -> ${previousPoint}`
-    );
+      robot.moveMouse(cursorToBePlacePosX, cursorToBePlacePosY);
 
-    previousPoint = [coordinateX, coordinateY, theta];
+      console.log(
+        `coordinates -> ${coordinateX} ${coordinateY}, prevCoordinates -> ${previousPoint}`
+      );
+
+      previousPoint = [coordinateX, coordinateY];
+    }
 
     res.json([]);
   }

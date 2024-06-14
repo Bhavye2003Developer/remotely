@@ -3,11 +3,11 @@ import axios from "axios";
 import { useRef } from "react";
 
 const Touchpad = () => {
-  const [pointerCoordinates, setPointerCoordinates] = useState([-1, -1, 0]);
-  const [canvasCoordinates, setCanvasCoordinates] = useState([-1, -1]);
+  const [pointerCoordinates, setPointerCoordinates] = useState([-1, -1]);
   const [padSize, setPadSize] = useState([0, 0]);
   const canvasCenterCoord = useRef([0, 0]);
   const canvasRef = useRef(null);
+  const isFirstTouch = useRef(null);
 
   const cnt = useRef(0);
 
@@ -16,21 +16,18 @@ const Touchpad = () => {
       .post("http://192.168.1.35:3000/touchpad", {
         pointerCoordinates,
         padSize,
+        isFirstTouch: isFirstTouch.current,
       })
       .then((res) => {
         // console.log("response: ", res);
       });
+    isFirstTouch.current = 0;
     cnt.current += 1;
   }, [pointerCoordinates]);
 
   useEffect(() => {
     if (canvasRef.current) {
       const rect = canvasRef.current.getBoundingClientRect();
-
-      console.log(rect.left, rect.top, rect.right, rect.bottom);
-      console.log((rect.right - rect.left) / 2);
-
-      setCanvasCoordinates([rect.left, rect.top, rect.right, rect.bottom]);
 
       const padWidth = canvasRef.current.offsetWidth;
       const padHeight = canvasRef.current.offsetHeight;
@@ -69,34 +66,10 @@ const Touchpad = () => {
             Math.pow(x2 - canvasCenterCoord.current[0], 2) +
               Math.pow(y2 - canvasCenterCoord.current[1], 2)
           );
-
-          const pointPerpendicularDistance = canvasCenterCoord.current[1] - y2;
-
-          const thetaInRadians = Math.asin(
-            pointPerpendicularDistance / hypotenuseFromCenter
-          );
-
           setPointerCoordinates([x2, y2, hypotenuseFromCenter]);
-
-          let thetaInDegree = thetaInRadians * (180 / 3.14);
-
-          const base = x2 - canvasCenterCoord.current[0];
-          if (base >= 0 && pointPerpendicularDistance >= 0)
-            thetaInDegree = 180 - thetaInDegree;
-          else if (base > 0 && pointPerpendicularDistance < 0)
-            thetaInDegree = Math.abs(thetaInDegree) + 180;
-          else if (base < 0 && pointPerpendicularDistance < 0)
-            thetaInDegree = 270 + (90 + thetaInDegree);
         }}
+        onTouchStart={() => (isFirstTouch.current = 1)}
       ></canvas>
-      <br />
-      {`Hypotenuse: ${pointerCoordinates[2]}`}
-      <br />
-      {`centerX: ${canvasCenterCoord.current[0]} centerY: ${canvasCenterCoord.current[1]}`}
-      <br />
-      {`padSize: ${padSize[0]}, ${padSize[1]}`}
-      <br />
-      {cnt.current}
     </div>
   );
 };
