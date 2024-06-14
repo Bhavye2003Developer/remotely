@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useRef } from "react";
+import { getHypotenuse } from "../utils/geo";
 
 const Touchpad = () => {
   const [pointerCoordinates, setPointerCoordinates] = useState([-1, -1]);
@@ -62,11 +63,10 @@ const Touchpad = () => {
         onTouchMove={(e) => {
           const x2 = e.changedTouches[0].clientX;
           const y2 = e.changedTouches[0].clientY;
-          const hypotenuseFromCenter = Math.sqrt(
-            Math.pow(x2 - canvasCenterCoord.current[0], 2) +
-              Math.pow(y2 - canvasCenterCoord.current[1], 2)
-          );
-          setPointerCoordinates([x2, y2, hypotenuseFromCenter]);
+
+          const hypotenuse = getHypotenuse(x2, y2, canvasCenterCoord);
+
+          setPointerCoordinates([x2, y2, hypotenuse]);
         }}
         onTouchStart={() => (isFirstTouch.current = 1)}
       ></canvas>
