@@ -1,20 +1,12 @@
 const express = require("express");
-const cors = require("cors");
 const robot = require("robotjs");
-const app = express();
-const port = 3000;
-
-app.use(express.json());
-app.use(cors());
+const router = express.Router();
 
 const screenSize = robot.getScreenSize();
-
-console.log(robot.getMousePos());
-
 let previousPoint = [-1, -1];
+robot.setMouseDelay(2);
 
-app.post("/touchpad", (req, res) => {
-  console.log("hit");
+router.post("/move", (req, res) => {
   const [coordinateX, coordinateY] = req.body.pointerCoordinates;
   const isFirstTouch = req.body.isFirstTouch;
   const padSize = req.body.padSize;
@@ -42,21 +34,17 @@ app.post("/touchpad", (req, res) => {
       robot.moveMouse(cursorToBePlacePosX, cursorToBePlacePosY);
 
       console.log(
-        `coordinates -> ${coordinateX} ${coordinateY}, prevCoordinates -> ${previousPoint}`
+        `hit - touchpad\tcoordinates -> ${coordinateX} ${coordinateY}, prevCoordinates -> ${previousPoint}`
       );
-
       previousPoint = [coordinateX, coordinateY];
     }
-
     res.json([]);
   }
 });
 
-app.get("/", (req, res) => {
-  console.log("hitted");
-  res.send("");
+router.post("/click", (req, res) => {
+  // robot.mouseClick();
+  res.json();
 });
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
-});
+module.exports = router;

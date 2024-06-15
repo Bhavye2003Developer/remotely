@@ -5,26 +5,26 @@ import { getHypotenuse } from "../utils/geo";
 
 const Touchpad = () => {
   const [pointerCoordinates, setPointerCoordinates] = useState([-1, -1]);
+  const [isClicked, setIsClicked] = useState(false);
   const [padSize, setPadSize] = useState([0, 0]);
   const canvasCenterCoord = useRef([0, 0]);
   const canvasRef = useRef(null);
   const isFirstTouch = useRef(null);
 
-  const cnt = useRef(0);
+  useEffect(() => {
+    axios.post("http://192.168.1.35:3000/touchpad/move", {
+      pointerCoordinates,
+      padSize,
+      isFirstTouch: isFirstTouch.current,
+    });
+    isFirstTouch.current = 0;
+  }, [pointerCoordinates]);
 
   useEffect(() => {
-    axios
-      .post("http://192.168.1.35:3000/touchpad", {
-        pointerCoordinates,
-        padSize,
-        isFirstTouch: isFirstTouch.current,
-      })
-      .then((res) => {
-        // console.log("response: ", res);
-      });
-    isFirstTouch.current = 0;
-    cnt.current += 1;
-  }, [pointerCoordinates]);
+    console.log("clicked");
+    axios.post("http://192.168.1.35:3000/touchpad/click", { clicked: true });
+    setIsClicked(false);
+  }, [isClicked]);
 
   useEffect(() => {
     if (canvasRef.current) {
@@ -69,6 +69,9 @@ const Touchpad = () => {
           setPointerCoordinates([x2, y2, hypotenuse]);
         }}
         onTouchStart={() => (isFirstTouch.current = 1)}
+        onClick={() => {
+          setIsClicked(true);
+        }}
       ></canvas>
     </div>
   );
