@@ -6,10 +6,13 @@ import { getHypotenuse } from "../utils/geo";
 const Touchpad = () => {
   const [pointerCoordinates, setPointerCoordinates] = useState([-1, -1]);
   const [isClicked, setIsClicked] = useState(false);
+  const [isButtonClicked, setIsButtonClicked] = useState(0); // -1 -> right, 0 -> none, 1 -> left
+  // const [doubleTouchScrollLength, setDoubleTouchScrollLength] = useState(0);
   const [padSize, setPadSize] = useState([0, 0]);
   const canvasCenterCoord = useRef([0, 0]);
   const canvasRef = useRef(null);
   const isFirstTouch = useRef(null);
+  // const [doubleTouchY, setDoubleTouchY] = useState(null);
 
   useEffect(() => {
     axios.post("http://192.168.1.35:3000/touchpad/move", {
@@ -21,10 +24,35 @@ const Touchpad = () => {
   }, [pointerCoordinates]);
 
   useEffect(() => {
-    console.log("clicked");
-    axios.post("http://192.168.1.35:3000/touchpad/click", { clicked: true });
+    if (isClicked) {
+      console.log("clicked");
+      axios.post("http://192.168.1.35:3000/touchpad/click", { clicked: true });
+    }
     setIsClicked(false);
   }, [isClicked]);
+
+  useEffect(() => {
+    if (isButtonClicked == -1) {
+      console.log("right-clicked");
+      axios.post("http://192.168.1.35:3000/touchpad/right-click", {
+        right_clicked: true,
+      });
+    } else if (isButtonClicked == 1) {
+      console.log("left-clicked");
+      axios.post("http://192.168.1.35:3000/touchpad/left-click", {
+        left_clicked: true,
+      });
+    }
+    setIsButtonClicked(0);
+  }, [isButtonClicked]);
+
+  // useEffect(() => {
+  //   if (doubleTouchScrollLength !== 0) {
+  //     axios.post("http://192.168.1.35:3000/touchpad/scroll", {
+  //       scroll_length: doubleTouchScrollLength,
+  //     });
+  //   }
+  // }, [doubleTouchScrollLength]);
 
   useEffect(() => {
     if (canvasRef.current) {
@@ -50,29 +78,51 @@ const Touchpad = () => {
       }}
     >
       <h2>Touchpad</h2>
-      <canvas
-        style={{
-          width: "90%",
-          height: 300,
-          padding: "10px",
-          paddingLeft: 20,
-          backgroundColor: "#000132",
-          overflow: "hidden",
-        }}
-        ref={canvasRef}
-        onTouchMove={(e) => {
-          const x2 = e.changedTouches[0].clientX;
-          const y2 = e.changedTouches[0].clientY;
+      <div>
+        <div>
+          <canvas
+            style={{
+              width: "90%",
+              height: 300,
+              padding: "10px",
+              paddingLeft: 20,
+              backgroundColor: "#000132",
+              overflow: "hidden",
+            }}
+            ref={canvasRef}
+            onTouchMove={(e) => {
+              // if (e.touches.length === 2) {
+              //   const delta = doubleTouchY - e.touches[0].clientY;
+              //   //  lastTouchY = e.touches[0].clientY;
+              //   setDoubleTouchScrollLength(delta);
+              //   setDoubleTouchY(e.touches[0].clientY);
+              //   console.log("double scroll ", delta);
+              // } else {
+              const x2 = e.changedTouches[0].clientX;
+              const y2 = e.changedTouches[0].clientY;
 
-          const hypotenuse = getHypotenuse(x2, y2, canvasCenterCoord);
+              const hypotenuse = getHypotenuse(x2, y2, canvasCenterCoord);
 
-          setPointerCoordinates([x2, y2, hypotenuse]);
-        }}
-        onTouchStart={() => (isFirstTouch.current = 1)}
-        onClick={() => {
-          setIsClicked(true);
-        }}
-      ></canvas>
+              setPointerCoordinates([x2, y2, hypotenuse]);
+              // }
+            }}
+            onTouchStart={(e) => {
+              // if (e.touches.length === 2) {
+              //   console.log("double touch");
+              //   setDoubleTouchY(e.touches[0].clientY);
+              // } else
+              isFirstTouch.current = 1;
+            }}
+            onClick={() => {
+              setIsClicked(true);
+            }}
+          ></canvas>
+        </div>
+        <div>
+          <button onClick={() => setIsButtonClicked(1)}>Left Click</button>
+          <button onClick={() => setIsButtonClicked(-1)}>Right click</button>
+        </div>
+      </div>
     </div>
   );
 };

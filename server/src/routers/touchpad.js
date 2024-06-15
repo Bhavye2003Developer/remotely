@@ -4,7 +4,7 @@ const router = express.Router();
 
 const screenSize = robot.getScreenSize();
 let previousPoint = [-1, -1];
-robot.setMouseDelay(2);
+robot.setMouseDelay(5);
 
 router.post("/move", (req, res) => {
   const [coordinateX, coordinateY] = req.body.pointerCoordinates;
@@ -43,8 +43,27 @@ router.post("/move", (req, res) => {
 });
 
 router.post("/click", (req, res) => {
-  // robot.mouseClick();
+  robot.mouseClick();
   res.json();
 });
+
+router.post("/right-click", (req, res) => {
+  robot.mouseClick("right");
+  res.json();
+});
+
+router.post("/left-click", (req, res) => {
+  robot.mouseClick("left");
+  res.json();
+});
+
+// router.post("/scroll", (req, res) => {
+//   const scroll_length = req.body.scroll_length;
+//   console.log("scroll - ", scroll_length);
+
+//   robot.scrollMouse(0, -5);
+
+//   res.json();
+// });
 
 module.exports = router;
