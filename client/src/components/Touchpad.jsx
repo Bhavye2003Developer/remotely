@@ -5,6 +5,7 @@ import { getHypotenuse } from "../utils/geo";
 
 const Touchpad = () => {
   const [pointerCoordinates, setPointerCoordinates] = useState([-1, -1]);
+  const [socket, setSocket] = useState(null);
   const [isClicked, setIsClicked] = useState(false);
   const [isButtonClicked, setIsButtonClicked] = useState(0); // -1 -> right, 0 -> none, 1 -> left
   // const [doubleTouchScrollLength, setDoubleTouchScrollLength] = useState(0);
@@ -15,12 +16,37 @@ const Touchpad = () => {
   // const [doubleTouchY, setDoubleTouchY] = useState(null);
 
   useEffect(() => {
-    axios.post("http://192.168.1.35:3000/touchpad/move", {
-      pointerCoordinates,
-      padSize,
-      isFirstTouch: isFirstTouch.current,
-    });
-    isFirstTouch.current = 0;
+    const socket = new WebSocket("ws://192.168.1.35:3000/touchpad/move");
+    socket.onopen = () => {
+      console.log("connected to ws server");
+    };
+    setSocket(socket);
+
+    return () => {
+      console.log("closing ws connection...");
+      socket.close();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (pointerCoordinates[0] != -1 && pointerCoordinates[1] !== -1) {
+      // axios.post("http://192.168.1.35:3000/touchpad/move", {
+      //   pointerCoordinates,
+      //   padSize,
+      //   isFirstTouch: isFirstTouch.current,
+      // });
+
+      console.log(pointerCoordinates);
+
+      socket.send(
+        JSON.stringify({
+          pointerCoordinates,
+          padSize,
+          isFirstTouch: isFirstTouch.current,
+        })
+      );
+      isFirstTouch.current = 0;
+    }
   }, [pointerCoordinates]);
 
   useEffect(() => {

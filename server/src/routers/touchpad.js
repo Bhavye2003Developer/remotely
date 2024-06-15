@@ -2,68 +2,53 @@ const express = require("express");
 const robot = require("robotjs");
 const router = express.Router();
 
-const screenSize = robot.getScreenSize();
 let previousPoint = [-1, -1];
-robot.setMouseDelay(5);
+robot.setMouseDelay(0);
 
-router.post("/move", (req, res) => {
-  const [coordinateX, coordinateY] = req.body.pointerCoordinates;
-  const isFirstTouch = req.body.isFirstTouch;
-  const padSize = req.body.padSize;
+router.ws("/move", (ws, req) => {
+  console.log("WebSocket connection established");
+  ws.on("error", (err) => {
+    console.log("Error occurred:", err);
+  });
+  ws.on("message", (msg) => {
+    const { pointerCoordinates, isFirstTouch } = JSON.parse(msg);
+    const [coordinateX, coordinateY] = pointerCoordinates;
+    const { x: currentCursorPosX, y: currentCursorPosY } = robot.getMousePos();
 
-  const [currentCursorPosX, currentCursorPosY] = [
-    robot.getMousePos().x,
-    robot.getMousePos().y,
-  ];
-
-  if (coordinateX === -1 && coordinateY === -1) {
-    const mouseCurPos = robot.getMousePos();
-    return res.json(mouseCurPos);
-  } else {
-    // const PadTouchPosX = (coordinates[0] * screenSize.width) / padSize[0];
-    // const PadTouchPosY = (coordinates[1] * screenSize.height) / padSize[1];
-
-    if (isFirstTouch === 1) previousPoint = [coordinateX, coordinateY];
-    else {
-      const divX = coordinateX - previousPoint[0];
-      const divY = coordinateY - previousPoint[1];
-
-      const cursorToBePlacePosX = currentCursorPosX + divX;
-      const cursorToBePlacePosY = currentCursorPosY + divY;
-
-      robot.moveMouse(cursorToBePlacePosX, cursorToBePlacePosY);
-
-      console.log(
-        `hit - touchpad\tcoordinates -> ${coordinateX} ${coordinateY}, prevCoordinates -> ${previousPoint}`
-      );
-      previousPoint = [coordinateX, coordinateY];
+    if (coordinateX !== -1 && coordinateY !== -1) {
+      if (isFirstTouch === 1) {
+        previousPoint = [coordinateX, coordinateY];
+      } else {
+        const divX = coordinateX - previousPoint[0];
+        const divY = coordinateY - previousPoint[1];
+        const cursorToBePlacePosX = currentCursorPosX + divX * 2;
+        const cursorToBePlacePosY = currentCursorPosY + divY * 2;
+        robot.moveMouse(cursorToBePlacePosX, cursorToBePlacePosY);
+        console.log(
+          `Moving cursor: current(${currentCursorPosX}, ${currentCursorPosY}) -> new(${cursorToBePlacePosX}, ${cursorToBePlacePosY})`
+        );
+        previousPoint = [coordinateX, coordinateY];
+      }
     }
-    res.json([]);
-  }
+  });
+  ws.on("close", () => {
+    console.log("WebSocket was closed");
+  });
 });
 
 router.post("/click", (req, res) => {
   robot.mouseClick();
-  res.json();
+  res.json({ success: true });
 });
 
 router.post("/right-click", (req, res) => {
   robot.mouseClick("right");
-  res.json();
+  res.json({ success: true });
 });
 
 router.post("/left-click", (req, res) => {
   robot.mouseClick("left");
-  res.json();
+  res.json({ success: true });
 });
-
-// router.post("/scroll", (req, res) => {
-//   const scroll_length = req.body.scroll_length;
-//   console.log("scroll - ", scroll_length);
-
-//   robot.scrollMouse(0, -5);
-
-//   res.json();
-// });
 
 module.exports = router;

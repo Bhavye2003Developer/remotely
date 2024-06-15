@@ -1,7 +1,8 @@
 const express = require("express");
 const cors = require("cors");
-const touchpad = require("./routers/touchpad");
 const app = express();
+const expressWs = require("express-ws")(app);
+const touchpad = require("./routers/touchpad");
 const port = 3000;
 
 app.use(express.json());
