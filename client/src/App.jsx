@@ -1,12 +1,10 @@
 import "./App.css";
-import FullScreen from "./components/FullScreen";
-import Touchpad from "./components/Touchpad";
+import Home from "./components/Home";
 
 const App = () => {
   return (
     <div>
-      <Touchpad />
-      <FullScreen />
+      <Home />
     </div>
   );
 };
