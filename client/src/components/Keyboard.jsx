@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import KeyboardSymbol from "../assets/keyboard-symbol.svg?react";
 
 const Keyboard = ({ socket }) => {
   const [inputText, setInputText] = useState("");
@@ -20,6 +21,7 @@ const Keyboard = ({ socket }) => {
     <div>
       <input
         type="text"
+        className="w-0"
         ref={inputRef}
         value={inputText}
         onChange={(e) => setInputText(e.target.value)}
@@ -36,16 +38,28 @@ const Keyboard = ({ socket }) => {
               })
             );
         }}
-      />
-      <button
-        onClick={() => {
-          if (!isInputFocused) {
-            inputRef.current?.focus();
-          } else inputRef.current?.blur();
+        onBlurCapture={() => {
+          setIsInputFocused(false);
         }}
-      >
-        Enable keyboard
-      </button>
+      />
+      {inputRef && (
+        <div>
+          <button
+            onClick={() => {
+              if (!isInputFocused) {
+                inputRef.current?.focus();
+                setIsInputFocused(true);
+              } else {
+                inputRef.current?.blur();
+                setIsInputFocused(false);
+              }
+            }}
+            className="p-2"
+          >
+            <KeyboardSymbol />
+          </button>
+        </div>
+      )}
     </div>
   );
 };

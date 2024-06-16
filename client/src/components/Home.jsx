@@ -21,10 +21,10 @@ const Home = () => {
 
   if (!socket) return <div>Loading...</div>;
   return (
-    <div>
+    <div className="w-full h-full">
       <Touchpad socket={socket} />
       <FullScreen />
-      <Keyboard socket={socket}     />
+      <Keyboard socket={socket} />
     </div>
   );
 };
