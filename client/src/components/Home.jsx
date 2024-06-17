@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import FullScreen from "./FullScreen";
 import Touchpad from "./Touchpad";
 import Keyboard from "./Keyboard";
+import FileTransfer from "./FileTransfer";
 
 const Home = () => {
   const [socket, setSocket] = useState(null);
@@ -22,9 +23,10 @@ const Home = () => {
   if (!socket) return <div>Loading...</div>;
   return (
     <div className="w-full h-full">
-      <Touchpad socket={socket} />
+      {/* <Touchpad socket={socket} />
       <FullScreen />
-      <Keyboard socket={socket} />
+      <Keyboard socket={socket} /> */}
+      <FileTransfer />
     </div>
   );
 };

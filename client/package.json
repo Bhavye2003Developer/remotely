@@ -13,8 +13,6 @@
     "axios": "^1.7.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-simple-keyboard": "^3.7.128",
-    "simple-keyboard": "^3.7.86",
     "vite-plugin-svgr": "^4.2.0"
   },
   "devDependencies": {
