@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import axios from "axios";
-import { getHypotenuse } from "../utils/geo";
+import { getHypotenuse } from "../../utils/geo";
+import Keyboard from "./Keyboard";
 
 const Touchpad = ({ socket }) => {
   const [pointerCoordinates, setPointerCoordinates] = useState([-1, -1]);
@@ -64,10 +65,10 @@ const Touchpad = ({ socket }) => {
 
   return (
     <div className="flex flex-col items-center justify-center h-full w-full p-4">
-      <h2 className="text-2xl font-semibold mb-4">Touchpad</h2>
-      <div className="w-full max-w-sm">
+      <h2 className="text-3xl font-bold mb-6">Touchpad</h2>
+      <div className="w-full max-w-md">
         <canvas
-          className="bg-neutral-700 w-full h-96 rounded-lg shadow-lg"
+          className="bg-gray-800 w-full h-96 rounded-lg shadow-lg"
           ref={canvasRef}
           onTouchMove={(e) => {
             const x2 = e.changedTouches[0].clientX;
@@ -85,17 +86,20 @@ const Touchpad = ({ socket }) => {
         <div className="flex w-full mt-4">
           <button
             onClick={() => setIsButtonClicked(1)}
-            className="w-1/2 bg-gray-600 border border-black hover:bg-gray-800 rounded-l-lg mr-1 h-12 text-white"
+            className="w-1/2 bg-blue-600 hover:bg-blue-700 rounded-l-lg mr-1 h-12 text-white transition-colors duration-300"
           >
             Left Click
           </button>
           <button
             onClick={() => setIsButtonClicked(-1)}
-            className="w-1/2 bg-gray-600 border border-black hover:bg-gray-800 rounded-r-lg h-12 text-white"
+            className="w-1/2 bg-blue-600 hover:bg-blue-700 rounded-r-lg h-12 text-white transition-colors duration-300"
           >
             Right Click
           </button>
         </div>
+      </div>
+      <div className="w-full">
+        <Keyboard socket={socket} />
       </div>
     </div>
   );

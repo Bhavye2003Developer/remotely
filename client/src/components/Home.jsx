@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
-import FullScreen from "./FullScreen";
-import Touchpad from "./Touchpad";
-import Keyboard from "./Keyboard";
-import FileTransfer from "./FileTransfer";
+import FullScreen from "./Mobile/FullScreen";
+import Touchpad from "./Mobile/Touchpad";
+import FileTransfer from "./Mobile/FileTransfer";
+import Header from "./Mobile/Header";
+import { BrowserView, MobileView } from "react-device-detect";
+import BrowserHeader from "./Browser/BroswserHeader";
 
 const Home = () => {
   const [socket, setSocket] = useState(null);
@@ -23,10 +25,20 @@ const Home = () => {
   if (!socket) return <div>Loading...</div>;
   return (
     <div className="w-full h-full">
-      {/* <Touchpad socket={socket} />
-      <FullScreen />
-      <Keyboard socket={socket} /> */}
-      <FileTransfer />
+      <MobileView>
+        <div>
+          <Touchpad socket={socket} />
+          <Header />
+          {/* <FullScreen /> */}
+          {/* <FileTransfer /> */}
+        </div>
+      </MobileView>
+      <BrowserView>
+        <BrowserHeader />
+        <div>
+          <h1>This is desktop</h1>
+        </div>
+      </BrowserView>
     </div>
   );
 };

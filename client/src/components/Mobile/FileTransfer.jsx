@@ -1,5 +1,5 @@
 import { useState } from "react";
-import file_transfer from "../utils/file_transfer";
+import file_transfer from "../../utils/file_transfer";
 
 const FileTransfer = () => {
   const [filesToTransfer, setFilesToTransfer] = useState(null);

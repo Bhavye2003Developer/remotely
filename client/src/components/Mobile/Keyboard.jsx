@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import KeyboardSymbol from "../assets/keyboard-symbol.svg?react";
+import KeyboardSymbol from "../../assets/keyboard-symbol.svg?react";
 
 const Keyboard = ({ socket }) => {
   const [inputText, setInputText] = useState("");

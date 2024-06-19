@@ -1,6 +1,6 @@
 import { useState } from "react";
-import FullscreenSymbol from "../assets/fullscreen-symbol.svg?react";
-import ExitFullscreenSymbol from "../assets/exit-fullscreen-symbol.svg?react";
+import FullscreenSymbol from "../../assets/fullscreen-symbol.svg?react";
+import ExitFullscreenSymbol from "../../assets/exit-fullscreen-symbol.svg?react";
 
 const FullScreen = () => {
   const [isFullScreen, setIsFullScreen] = useState(false);
