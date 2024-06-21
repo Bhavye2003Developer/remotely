@@ -1,9 +1,9 @@
-import FileTransfer from "./FileTransfer";
+import FileTransferer from "./FileTransferer";
 
 const BrowserHome = () => {
   return (
     <div>
-      <FileTransfer />
+      <FileTransferer />
     </div>
   );
 };

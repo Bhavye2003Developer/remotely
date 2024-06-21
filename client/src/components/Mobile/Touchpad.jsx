@@ -3,7 +3,8 @@ import axios from "axios";
 import { getHypotenuse } from "../../utils/geo";
 import Keyboard from "./Keyboard";
 
-const Touchpad = ({ socket }) => {
+const Touchpad = () => {
+  const [socket, setSocket] = useState(null);
   const [pointerCoordinates, setPointerCoordinates] = useState([-1, -1]);
   const [isClicked, setIsClicked] = useState(false);
   const [isButtonClicked, setIsButtonClicked] = useState(0); // -1 -> right, 0 -> none, 1 -> left
@@ -11,6 +12,19 @@ const Touchpad = ({ socket }) => {
   const canvasCenterCoord = useRef([0, 0]);
   const canvasRef = useRef(null);
   const isFirstTouch = useRef(null);
+
+  useEffect(() => {
+    const socket = new WebSocket("ws://192.168.1.35:3000/real-time");
+    socket.onopen = () => {
+      console.log("connected to ws server");
+    };
+    setSocket(socket);
+
+    return () => {
+      console.log("closing ws connection...");
+      socket.close();
+    };
+  }, []);
 
   useEffect(() => {
     if (pointerCoordinates[0] !== -1 && pointerCoordinates[1] !== -1) {
@@ -62,6 +76,8 @@ const Touchpad = ({ socket }) => {
       setPadSize([padWidth, padHeight]);
     }
   }, [canvasRef.current]);
+
+  if (!socket) return <div>Loading...</div>;
 
   return (
     <div className="flex flex-col items-center justify-center h-full w-full p-4">

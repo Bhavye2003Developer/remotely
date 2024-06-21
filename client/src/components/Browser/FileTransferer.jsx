@@ -1,10 +1,31 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import file_transfer from "../../utils/file_transfer";
+import { sendAndReceive_sender } from "../../utils/webRTC_setter";
 
 const FileTransfer = () => {
   const [filesToTransfer, setFilesToTransfer] = useState(null);
   const [message, setMessage] = useState({});
   const [isUploading, setIsUploading] = useState(false);
+  const [socket, setSocket] = useState(null);
+
+  const [text, setText] = useState("");
+
+  useEffect(() => {
+    const socket = new WebSocket("ws://192.168.1.35:3000/reach-signal-server");
+    socket.onopen = () => {
+      console.log("connected to ws server");
+    };
+
+    // sender
+    sendAndReceive_sender(socket);
+
+    setSocket(socket);
+
+    return () => {
+      console.log("closing ws connection...");
+      socket.close();
+    };
+  }, []);
 
   const handleUpload = () => {
     if (filesToTransfer && filesToTransfer.length > 0) {
