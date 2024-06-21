@@ -2,7 +2,7 @@ import FullScreen from "./FullScreen";
 import Touchpad from "./Touchpad";
 import FileTransferer from "./FileTransferer";
 import Header from "./Header";
-import FileTransfererDesktop from "./FileTransfererDesktop";
+import FileReceiver from "./FileReceiver";
 
 const MobileHome = () => {
   return (
@@ -12,7 +12,7 @@ const MobileHome = () => {
         {/* <Touchpad /> */}
         {/* <FullScreen /> */}
         {/* <FileTransferer/> */}
-        <FileTransfererDesktop />
+        <FileReceiver />
       </div>
     </div>
   );

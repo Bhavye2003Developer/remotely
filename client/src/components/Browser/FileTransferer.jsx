@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
 import file_transfer from "../../utils/file_transfer";
-import { sendAndReceive_sender } from "../../utils/webRTC_setter";
+import WebRTC_setter from "../../utils/webRTC_setter";
 
 const FileTransfer = () => {
   const [filesToTransfer, setFilesToTransfer] = useState(null);
   const [message, setMessage] = useState({});
   const [isUploading, setIsUploading] = useState(false);
-  const [socket, setSocket] = useState(null);
+  const [isRemoteDataChannelConnected, setIsRemoteDataChannelConnected] =
+    useState(false);
 
-  const [text, setText] = useState("");
+  const [webrtc_setter, setWebRTC_setter] = useState(null);
 
   useEffect(() => {
     const socket = new WebSocket("ws://192.168.1.35:3000/reach-signal-server");
@@ -16,10 +17,15 @@ const FileTransfer = () => {
       console.log("connected to ws server");
     };
 
-    // sender
-    sendAndReceive_sender(socket);
+    const webRTC_setter = new WebRTC_setter(socket);
 
-    setSocket(socket);
+    // sender
+    webRTC_setter.sendAndReceive_sender((signal) => {
+      console.log("signal: ", signal);
+      setIsRemoteDataChannelConnected(signal);
+    });
+
+    setWebRTC_setter(webRTC_setter);
 
     return () => {
       console.log("closing ws connection...");
@@ -29,11 +35,17 @@ const FileTransfer = () => {
 
   const handleUpload = () => {
     if (filesToTransfer && filesToTransfer.length > 0) {
-      setIsUploading(true);
-      file_transfer(filesToTransfer, false).then((res) => {
-        setIsUploading(false);
-        setMessage({ status: res.data.status, msg: res.data.msg });
-      });
+      // setIsUploading(true);
+      // file_transfer(filesToTransfer, false).then((res) => {
+
+      console.log("files to send: ", filesToTransfer);
+      setIsUploading(false);
+      // setMessage({ status: res.data.status, msg: res.data.msg });
+      // });
+
+      webrtc_setter.file_transfer(filesToTransfer);
+
+      // send file to webrtc_setter
     } else {
       setMessage({ status: -1, msg: "No file uploaded" });
     }
@@ -41,7 +53,10 @@ const FileTransfer = () => {
 
   return (
     <div className="p-4 max-w-md mx-auto bg-white shadow-md rounded-lg">
-      <h2 className="text-2xl font-semibold mb-4">File Transfer</h2>
+      <h2 className="text-2xl font-semibold mb-4">
+        File Transfer |{" "}
+        {isRemoteDataChannelConnected ? "connected" : "disconnected"}
+      </h2>
 
       <div className="border border-gray-300 p-3 rounded-lg mb-4">
         <label className="cursor-pointer w-full h-full flex justify-center items-center">
@@ -50,6 +65,7 @@ const FileTransfer = () => {
             multiple
             className="hidden"
             onChange={(e) => setFilesToTransfer(e.target.files)}
+            disabled={isRemoteDataChannelConnected ? false : true}
           />
           <span className="text-blue-600">Choose files</span>
         </label>
@@ -66,6 +82,7 @@ const FileTransfer = () => {
         <button
           className="w-full bg-blue-600 text-white p-2 rounded-lg hover:bg-blue-700 transition"
           onClick={handleUpload}
+          disabled={isRemoteDataChannelConnected ? false : true}
         >
           Upload
         </button>
