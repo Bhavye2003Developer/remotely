@@ -43,7 +43,7 @@ const FileTransfer = () => {
       // setMessage({ status: res.data.status, msg: res.data.msg });
       // });
 
-      webrtc_setter.file_transfer(filesToTransfer);
+      webrtc_setter.sendFile(filesToTransfer[0]);
 
       // send file to webrtc_setter
     } else {
