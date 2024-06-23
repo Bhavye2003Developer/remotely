@@ -101,6 +101,7 @@ class WebRTC_setter {
 
   async receiveAndSend_receiver(setFileMetaData) {
     const peerConnection = new RTCPeerConnection();
+
     this.receiverPeerConnection = peerConnection;
     this.socket.onmessage = async (message) => {
       console.log(`data: ${message.data}`);

@@ -14,7 +14,7 @@ const FileReceiver = () => {
 
     const webRTC_setter = new WebRTC_setter(socket);
 
-    //receiver
+    // Receiver setup
     webRTC_setter.receiveAndSend_receiver(setFileMetaData);
     webRTC_setter.receiveFile(
       (signal) => setIsConnectedToLocal(signal),
@@ -24,7 +24,7 @@ const FileReceiver = () => {
     return () => {
       console.log("closing ws connection...");
       socket.close();
-      webRTC_setter.closeChannels();
+      // webRTC_setter.closeChannels();
     };
   }, []);
 
@@ -33,12 +33,14 @@ const FileReceiver = () => {
   }, [fileMetaData]);
 
   return (
-    <div>
+    <div className="bg-gray-100 p-8 rounded-lg shadow-md">
+      <p className="text-lg font-semibold mb-4">
+        {isConnectedToLocal ? "Connected" : "Disconnected!"}
+      </p>
+      <p className="text-base">
+        If not opened, Go to 'http://localhost:5173/send-file' on your desktop
+      </p>
       <a ref={fileDownloadRef} />
-      <br />
-      {isConnectedToLocal ? "connected" : "disconnected!"}
-      <br />
-      Go to 'http://localhost:5137/send-file' on your desktop
     </div>
   );
 };

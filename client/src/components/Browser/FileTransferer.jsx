@@ -30,7 +30,7 @@ const FileTransfer = () => {
     return () => {
       console.log("closing ws connection...");
       socket.close();
-      webRTC_setter.closeChannels()
+      // webRTC_setter.closeChannels()
     };
   }, []);
 
@@ -73,10 +73,7 @@ const FileTransfer = () => {
       </div>
 
       {filesToTransfer && filesToTransfer.length > 0 && (
-        <div className="text-gray-600 mb-4">
-          {filesToTransfer.length} file{filesToTransfer.length > 1 ? "s" : ""}{" "}
-          selected
-        </div>
+        <div className="text-gray-600 mb-4">1 selected</div>
       )}
 
       <div className="w-full mt-4">
