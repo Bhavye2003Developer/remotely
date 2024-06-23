@@ -52,11 +52,8 @@ class WebRTC_setter {
   }
 
   sendFile(fileToTransfer) {
-    // console.log("file transferring...");
-    // this.senderDataChannel.send(JSON.stringify(fileToTransfer));
-
     const file = fileToTransfer;
-
+    console.log("inhereted: ", file);
     const fileInfo = {
       name: file.name,
       size: file.size,
@@ -123,7 +120,6 @@ class WebRTC_setter {
             new RTCIceCandidate(msg.candidate)
           );
         } else if (msg.name && msg.size && msg.type && msg.lastModified) {
-          // console.log("setting fileMetaData");
           await setFileMetaData(msg);
           this.fileMetaData = msg;
         }
@@ -154,21 +150,34 @@ class WebRTC_setter {
           const received = new Blob(this.receiveBuffer);
           const fileAccessLink = URL.createObjectURL(received);
 
-          console.log("file downloaded completed", fileAccessLink);
+          console.log("file downloaded completely", fileAccessLink);
 
           console.log(fileDownloadRef);
           fileDownloadRef.href = fileAccessLink;
           fileDownloadRef.download = this.fileMetaData.name;
           fileDownloadRef.textContent = `Click to download '${this.fileMetaData.name}' (${this.fileMetaData.size} bytes)`;
 
-          this.receiveBuffer = [];
-          this.fileMetaData = null;
-          // const bitrate = Math.round(
-          //   (this.receivedSize * 8) / (new Date().getTime() - timestampStart)
-          // );
+          this.resetTransference();
         }
       };
     };
+  }
+
+  resetTransference() {
+    console.log("resetting everything");
+    this.receiveBuffer = [];
+    this.receivedSize = 0;
+    this.fileMetaData = null;
+  }
+
+  closeChannels() {
+    this.senderDataChannel.close();
+    console.log("sender datachannel closed");
+    this.senderDataChannel = null;
+    if (this.receiverPeerConnection) {
+      this.receiverPeerConnection.close();
+      this.receiverPeerConnection = null;
+    }
   }
 }
 

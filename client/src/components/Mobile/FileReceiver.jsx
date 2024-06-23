@@ -3,9 +3,7 @@ import WebRTC_setter from "../../utils/webRTC_setter";
 
 const FileReceiver = () => {
   const [isConnectedToLocal, setIsConnectedToLocal] = useState(false);
-  const [webrtc_setter, setWebRTC_setter] = useState(null);
   const [fileMetaData, setFileMetaData] = useState(null);
-  const [fileAccessLink, setFileAccessLink] = useState("");
   const fileDownloadRef = useRef(null);
 
   useEffect(() => {
@@ -22,11 +20,11 @@ const FileReceiver = () => {
       (signal) => setIsConnectedToLocal(signal),
       fileDownloadRef.current
     );
-    setWebRTC_setter(webRTC_setter);
 
     return () => {
       console.log("closing ws connection...");
       socket.close();
+      webRTC_setter.closeChannels();
     };
   }, []);
 
@@ -39,6 +37,8 @@ const FileReceiver = () => {
       <a ref={fileDownloadRef} />
       <br />
       {isConnectedToLocal ? "connected" : "disconnected!"}
+      <br />
+      Go to 'http://localhost:5137/send-file' on your desktop
     </div>
   );
 };

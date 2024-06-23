@@ -30,6 +30,7 @@ const FileTransfer = () => {
     return () => {
       console.log("closing ws connection...");
       socket.close();
+      webRTC_setter.closeChannels()
     };
   }, []);
 
@@ -38,7 +39,7 @@ const FileTransfer = () => {
       // setIsUploading(true);
       // file_transfer(filesToTransfer, false).then((res) => {
 
-      console.log("files to send: ", filesToTransfer);
+      console.log("files to send: ", filesToTransfer[0]);
       setIsUploading(false);
       // setMessage({ status: res.data.status, msg: res.data.msg });
       // });
