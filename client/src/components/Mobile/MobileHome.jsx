@@ -1,27 +1,41 @@
+import React, { useEffect, useState } from "react";
+import {
+  Link,
+  Outlet,
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useOutletContext,
+} from "react-router-dom";
 import Touchpad from "./Touchpad";
 import FileTransferer from "./FileTransferer";
 import Header from "./Header";
 import FileReceiver from "./FileReceiver";
-import {
-  Link,
-  Outlet,
-  RouterProvider,
-  createBrowserRouter,
-} from "react-router-dom";
 
 const LocalHome = () => {
+  const setRelativePath = useOutletContext();
+  useEffect(() => {
+    setRelativePath("/");
+  }, []);
+
   return (
-    <div>
-      <h1>Welcome to Desktop Remote</h1>
-      <ul>
+    <div className="p-8 flex flex-col justify-center">
+      <h1 className="text-3xl font-bold mb-6">Welcome to Desktop Remote</h1>
+      <ul className="space-y-4 text-lg">
         <li>
-          <Link to="/touchpad">Touchpad</Link>
+          <Link to="/touchpad" className="text-blue-600 hover:underline">
+            Touchpad
+          </Link>
         </li>
         <li>
-          <Link to="/send-file">Send File to desktop</Link>
+          <Link to="/send-file" className="text-blue-600 hover:underline">
+            Send File to desktop
+          </Link>
         </li>
         <li>
-          <Link to="/receive-file">Receive file from desktop</Link>
+          <Link to="/receive-file" className="text-blue-600 hover:underline">
+            Receive file from desktop
+          </Link>
         </li>
       </ul>
     </div>
@@ -29,39 +43,27 @@ const LocalHome = () => {
 };
 
 const MobileHome = () => {
+  const [relativePath, setRelativePath] = useState("/");
+
   return (
-    <div>
-      <Header />
-      <Outlet />
+    <div className="bg-white min-h-screen">
+      <Header relativePath={relativePath} />
+      <Outlet context={setRelativePath} />
     </div>
   );
 };
 
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <MobileHome />,
-    children: [
-      {
-        path: "/",
-        element: <LocalHome />,
-      },
-      {
-        path: "/touchpad",
-        element: <Touchpad />,
-      },
-      {
-        path: "/send-file",
-        element: <FileTransferer />,
-      },
-      {
-        path: "/receive-file",
-        element: <FileReceiver />,
-      },
-    ],
-  },
-]);
-
-const Home = () => <RouterProvider router={router} />;
+const Home = () => (
+  <Router>
+    <Routes>
+      <Route path="/" element={<MobileHome />}>
+        <Route index element={<LocalHome />} />
+        <Route path="/touchpad" element={<Touchpad />} />
+        <Route path="/send-file" element={<FileTransferer />} />
+        <Route path="/receive-file" element={<FileReceiver />} />
+      </Route>
+    </Routes>
+  </Router>
+);
 
 export default Home;
