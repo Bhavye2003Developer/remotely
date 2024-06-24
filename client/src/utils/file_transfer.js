@@ -1,4 +1,5 @@
 import axios from "axios";
+import { FILE_UPLOAD_URL } from "./config";
 
 export default async (filesToTransfer, isMobile = true) => {
   console.log(filesToTransfer);
@@ -12,14 +13,10 @@ export default async (filesToTransfer, isMobile = true) => {
     formData.append(`file_${index + 1}`, filesToTransfer[index]);
   });
 
-  const result = await axios.post(
-    isMobile ? "http://192.168.1.35:3000/upload" : "",
-    formData,
-    {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    }
-  );
+  const result = await axios.post(isMobile ? FILE_UPLOAD_URL : "", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
   return result;
 };

@@ -6,11 +6,12 @@ const FileTransfer = () => {
   const [filesToTransfer, setFilesToTransfer] = useState(null);
   const [message, setMessage] = useState({});
   const [isUploading, setIsUploading] = useState(false);
+  const [downloadPath, setDownloadPath] = useState("");
 
   const setRelativePath = useOutletContext();
   useEffect(() => {
     setRelativePath(location.pathname);
-  }, []);
+  }, [setRelativePath]);
 
   const handleUpload = () => {
     if (filesToTransfer && filesToTransfer.length > 0) {
@@ -18,6 +19,7 @@ const FileTransfer = () => {
       file_transfer(filesToTransfer).then((res) => {
         setIsUploading(false);
         setMessage({ status: res.data.status, msg: res.data.msg });
+        setDownloadPath(res.data.downloadPath);
       });
     } else {
       setMessage({ status: -1, msg: "No file uploaded" });
@@ -27,7 +29,6 @@ const FileTransfer = () => {
   return (
     <div className="p-6 max-w-lg mx-auto bg-white shadow-md rounded-lg">
       <h2 className="text-2xl font-semibold mb-6">File Transfer</h2>
-
       <div className="border border-gray-300 p-4 rounded-lg mb-4 hover:border-blue-500 transition duration-300">
         <label className="cursor-pointer w-full h-full flex justify-center items-center">
           <input
@@ -44,8 +45,8 @@ const FileTransfer = () => {
 
       {filesToTransfer && filesToTransfer.length > 0 && (
         <div className="text-gray-600 mb-4">
-          {filesToTransfer.length} file
-          {filesToTransfer.length > 1 ? "s" : ""} selected
+          {filesToTransfer.length} file{filesToTransfer.length > 1 ? "s" : ""}{" "}
+          selected
         </div>
       )}
 
@@ -70,19 +71,27 @@ const FileTransfer = () => {
           </div>
         ) : (
           message?.msg && (
-            <h3
-              className={`mt-4 text-center ${
-                message.status === -1
-                  ? "text-gray-600"
-                  : message.status === 0
-                  ? "text-green-600"
-                  : message.status === 1
-                  ? "text-red-600"
-                  : ""
-              }`}
-            >
-              {message.msg}
-            </h3>
+            <div className="mt-4 text-center">
+              <h3
+                className={`${
+                  message.status === -1
+                    ? "text-gray-600"
+                    : message.status === 0
+                    ? "text-green-600"
+                    : message.status === 1
+                    ? "text-red-600"
+                    : ""
+                }`}
+              >
+                {message.msg}
+              </h3>
+              {downloadPath && (
+                <p className="text-sm text-gray-600 mt-2">
+                  File downloaded to:{" "}
+                  <span className="font-medium">{downloadPath}</span>
+                </p>
+              )}
+            </div>
           )
         )}
       </div>

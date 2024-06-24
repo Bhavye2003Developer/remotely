@@ -3,6 +3,12 @@ import axios from "axios";
 import { getHypotenuse } from "../../utils/geo";
 import Keyboard from "./Keyboard";
 import { useOutletContext } from "react-router-dom";
+import {
+  LEFT_CLICK_URL,
+  RIGHT_CLICK_URL,
+  TOUCHPAD_CLICK_URL,
+  TOUCHPAD_URL,
+} from "../../utils/config";
 
 const Touchpad = () => {
   const [socket, setSocket] = useState(null);
@@ -17,9 +23,7 @@ const Touchpad = () => {
   useEffect(() => {
     setRelativePath(location.pathname);
 
-    console.log("path: ", location.pathname);
-
-    const socket = new WebSocket("ws://192.168.1.35:3000/real-time");
+    const socket = new WebSocket(TOUCHPAD_URL);
     socket.onopen = () => {
       console.log("Connected to WebSocket server");
     };
@@ -42,14 +46,14 @@ const Touchpad = () => {
           type: "move",
         })
       );
-      isFirstTouch.current = false;
+      isFirstTouch.current = 0;
     }
-  }, [pointerCoordinates, socket, padSize]);
+  }, [pointerCoordinates]);
 
   useEffect(() => {
     if (isClicked) {
       console.log("Sending click event");
-      axios.post("http://192.168.1.35:3000/touchpad/click", { clicked: true });
+      axios.post(TOUCHPAD_CLICK_URL, { clicked: true });
       setIsClicked(false);
     }
   }, [isClicked]);
@@ -57,12 +61,12 @@ const Touchpad = () => {
   useEffect(() => {
     if (isButtonClicked === -1) {
       console.log("Sending right-click event");
-      axios.post("http://192.168.1.35:3000/touchpad/right-click", {
+      axios.post(RIGHT_CLICK_URL, {
         right_clicked: true,
       });
     } else if (isButtonClicked === 1) {
       console.log("Sending left-click event");
-      axios.post("http://192.168.1.35:3000/touchpad/left-click", {
+      axios.post(LEFT_CLICK_URL, {
         left_clicked: true,
       });
     }
@@ -80,7 +84,7 @@ const Touchpad = () => {
       ];
       setPadSize([padWidth, padHeight]);
     }
-  }, []);
+  }, [canvasRef.current]);
 
   if (!socket) return <div>Loading...</div>;
 
@@ -98,7 +102,7 @@ const Touchpad = () => {
             setPointerCoordinates([x2, y2, hypotenuse]);
           }}
           onTouchStart={() => {
-            isFirstTouch.current = true;
+            isFirstTouch.current = 1;
           }}
           onClick={() => {
             setIsClicked(true);

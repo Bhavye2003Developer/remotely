@@ -3,6 +3,7 @@ import WebRTC_setter from "../../utils/webRTC_setter";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useOutletContext } from "react-router-dom";
+import { SIGNAL_SERVER_URL } from "../../utils/config";
 
 const FileReceiver = () => {
   const [isConnectedToLocal, setIsConnectedToLocal] = useState(false);
@@ -13,7 +14,7 @@ const FileReceiver = () => {
   useEffect(() => {
     setRelativePath(location.pathname);
 
-    const socket = new WebSocket("ws://192.168.1.35:3000/reach-signal-server");
+    const socket = new WebSocket(SIGNAL_SERVER_URL);
     socket.onopen = () => {
       console.log("Connected to WebSocket server");
       toast.success("Connected to WebSocket server");
@@ -51,7 +52,7 @@ const FileReceiver = () => {
   }, [fileMetaData]);
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md">
+    <div className="bg-white p-6 rounded-lg shadow-md max-w-lg mx-auto">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-2xl font-semibold">File Receiver</h2>
         <span
@@ -64,6 +65,9 @@ const FileReceiver = () => {
           {isConnectedToLocal ? "Connected" : "Disconnected"}
         </span>
       </div>
+      <p className="text-red-600 font-semibold mb-4">
+        Note: Supports only files up to 80MB.
+      </p>
       <p className="text-base mb-4">
         {isConnectedToLocal
           ? "Ready to receive files. If not receiving, ensure the sender is active."
