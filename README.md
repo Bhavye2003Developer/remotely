@@ -1,4 +1,3 @@
-![favicon-32x32](https://github.com/Bhavye2003Developer/remotely/assets/110657263/de8e1792-e68e-4d69-9229-0dea6c63e5a3) 
 # Remotely
 
 ## Overview
