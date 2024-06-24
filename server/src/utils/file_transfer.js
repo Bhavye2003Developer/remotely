@@ -2,6 +2,7 @@ const os = require("node:os");
 const fs = require("fs");
 const { formidable } = require("formidable");
 
+const homeDir = os.homedir();
 const file_transfer = (req, res) => {
   const form = formidable({});
   return form.parse(req, (err, fields, files) => {
@@ -12,7 +13,6 @@ const file_transfer = (req, res) => {
         msg: "Error uploading!",
       });
     }
-    const homeDir = os.homedir();
     const filesIndexes = Object.keys(files);
     filesIndexes.forEach((fileIndex) => {
       const properties = files[fileIndex][0];
@@ -25,6 +25,7 @@ const file_transfer = (req, res) => {
     return res.json({
       status: 0,
       msg: "uploaded successfully",
+      downloadPath: homeDir,
     });
   });
 };
