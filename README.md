@@ -1,5 +1,4 @@
-![remotely-icon](https://github.com/Bhavye2003Developer/remotely/assets/110657263/d037be49-876f-4e8c-a47c-b43964b3bb11)
-# Remotely
+![android-chrome-192x192](https://github.com/Bhavye2003Developer/remotely/assets/110657263/d3178a5b-9931-4bd0-8e77-98f340a479f8) # Remotely
 
 ## Overview
 
