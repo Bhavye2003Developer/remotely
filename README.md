@@ -1,8 +1,8 @@
-# Desktop Remote
+# Remotely
 
 ## Overview
 
-Desktop Remote is a versatile application that transforms your mobile device into a powerful remote control for your desktop. This application offers multiple functionalities, including file transfers, touchpad, and keyboard features, making it an essential tool for seamless interaction between your mobile and desktop environments.
+Remotely is a versatile application that transforms your mobile device into a powerful remote control for your desktop. This application offers multiple functionalities, including file transfers, touchpad, and keyboard features, making it an essential tool for seamless interaction between your mobile and desktop environments.
 
 ## Features
 
@@ -60,7 +60,7 @@ Desktop Remote is a versatile application that transforms your mobile device int
 
 ```bash
 
-git clone https://github.com/Bhavye2003Developer/desktop-remote.git
+git clone https://github.com/Bhavye2003Developer/remotely.git
 
 ```
 
@@ -68,7 +68,7 @@ git clone https://github.com/Bhavye2003Developer/desktop-remote.git
 
 ```bash
 
-cd desktop-remote
+cd remotely
 
 ```
 
