@@ -1,4 +1,4 @@
-![android-chrome-192x192](https://github.com/Bhavye2003Developer/remotely/assets/110657263/d3178a5b-9931-4bd0-8e77-98f340a479f8) # Remotely
+ ![favicon-32x32](https://github.com/Bhavye2003Developer/remotely/assets/110657263/de8e1792-e68e-4d69-9229-0dea6c63e5a3) #Remotely
 
 ## Overview
 
