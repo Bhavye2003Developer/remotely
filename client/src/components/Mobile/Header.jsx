@@ -32,7 +32,7 @@ const Header = ({ relativePath }) => {
           </Link>
         </h3>
 
-        <h3 className="text-lg font-semibold">Desktop Remote</h3>
+        <h3 className="text-lg font-semibold">Remotely</h3>
         <FullScreen />
       </div>
     </div>

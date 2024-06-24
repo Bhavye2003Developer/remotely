@@ -20,7 +20,7 @@ const LocalHome = () => {
 
   return (
     <div className="p-8 flex flex-col justify-center">
-      <h1 className="text-3xl font-bold mb-6">Welcome to Desktop Remote</h1>
+      <h1 className="text-3xl font-bold mb-6">Welcome to Remotely</h1>
       <ul className="space-y-4 text-lg">
         <li>
           <Link to="/touchpad" className="text-blue-600 hover:underline">
