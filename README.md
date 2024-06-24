@@ -1,3 +1,4 @@
+![remotely-icon](https://github.com/Bhavye2003Developer/remotely/assets/110657263/d037be49-876f-4e8c-a47c-b43964b3bb11)
 # Remotely
 
 ## Overview
