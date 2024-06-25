@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "nodemon index.js" 
   },
   "author": "",
   "license": "ISC",
@@ -14,6 +15,7 @@
     "express": "^4.19.2",
     "express-ws": "^5.0.2",
     "formidable": "^3.5.1",
+    "nodemon": "^3.1.4",
     "open": "^10.1.0",
     "robotjs": "^0.6.0",
     "ws": "^8.17.0"
